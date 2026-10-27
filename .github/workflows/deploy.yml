@@ -1,0 +1,36 @@
+name: Deploy Frontend to Game-API
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Frontend Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build TypeScript Files
+        run: |
+          npm install -g esbuild
+          mkdir -p build-output
+          
+          esbuild profile/src/main.ts --bundle --minify --outfile=build-output/app.js
+          cp profile/index.html build-output/
+          cp profile/style.css build-output/
+          
+          esbuild lobby/src/main.ts --bundle --minify --outfile=build-output/lobby.js
+          cp lobby/index.html build-output/
+          cp lobby/lobby.css build-output/
+          
+          cp assets/* build-output/
+          cp css/main.css build-output/ 2>/dev/null || true
+          
+          # کپی کل پوشه بازی‌ها
+          cp -r games build-output/
