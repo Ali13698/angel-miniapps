@@ -1,0 +1,43 @@
+name: Deploy Frontend to Game-API
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Frontend Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build TypeScript Files
+        run: |
+          # نصب ابزار کامپایل
+          npm install -g esbuild
+          
+          # ساخت پوشه خروجی
+          mkdir -p build-output
+          
+          # کامپایل پروفایل
+          esbuild profile/src/main.ts --bundle --minify --outfile=build-output/app.js
+          cp profile/index.html build-output/
+          cp profile/style.css build-output/
+          
+          # کامپایل لابی
+          esbuild lobby/src/main.ts --bundle --minify --outfile=build-output/lobby.js
+          cp lobby/index.html build-output/
+          cp lobby/lobby.css build-output/
+          
+          # کپی فایل‌های کتابخانه‌ای و استاتیک
+          cp assets/* build-output/
+          cp css/main.css build-output/ 2>/dev/null || true
+          
+          # ⬇️ این خط حیاتی بود که جا افتاده بود ⬇️
+          # کپی کل پوشه بازی‌ها (منچ و...)
+          cp -r games build-output/
