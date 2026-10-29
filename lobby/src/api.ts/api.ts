@@ -5,11 +5,17 @@ export function getUserId(): string {
     return tg ? String(tg) : "1001"; // Fallback for testing
 }
 
-// 🔒 تابع جدید: دریافت توکن امن JWT از سرور (حذف کامل btoa)
+// 🔒 تابع امن: فرستادن initData به جای id
 export async function getAuthToken(): Promise<string> {
     try {
-        const userId = getUserId();
-        const res = await fetch(`/api/auth/token?id=${userId}`);
+        const tg = (window as any).Telegram?.WebApp;
+        const initData = tg?.initData || "";
+        
+        const url = initData 
+            ? `/api/auth/token?initData=${encodeURIComponent(initData)}`
+            : `/api/auth/token?id=${getUserId()}`; // Fallback for browser testing
+            
+        const res = await fetch(url);
         const data = await res.json();
         return data.token || "";
     } catch (e) {
