@@ -5,14 +5,16 @@ export function getUserId(): string {
     return tg ? String(tg) : "1001"; // Fallback for testing
 }
 
-// 🔒 تابع امن: فرستادن initData به جای id
+// 🔒 تابع امن: فرستادن initData به همراه تشخیص پلتفرم (تلگرام یا بله)
 export async function getAuthToken(): Promise<string> {
     try {
         const tg = (window as any).Telegram?.WebApp;
         const initData = tg?.initData || "";
+        const isBale = window.location.hostname.includes("bale") || !!(window as any).Bale;
+        const platform = isBale ? "bale" : "telegram";
         
         const url = initData 
-            ? `/api/auth/token?initData=${encodeURIComponent(initData)}`
+            ? `/api/auth/token?initData=${encodeURIComponent(initData)}&platform=${platform}`
             : `/api/auth/token?id=${getUserId()}`; // Fallback for browser testing
             
         const res = await fetch(url);
