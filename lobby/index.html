@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Angel Lobby</title>
+  <link rel="stylesheet" href="lobby.css">
+</head>
+<body>
+  <div id="app">
+    <!-- این بخش‌ها توسط Router پیدا می‌شوند -->
+    <div id="screen-profile" class="screen active"></div>
+    <div id="screen-games" class="screen"></div>
+    <div id="screen-store" class="screen"></div>
+    <div id="screen-friends" class="screen"></div>
+    <div id="screen-rooms" class="screen"></div>
+
+    <!-- نوار پایین -->
+    <nav class="bottom-nav">
+      <div id="nav-home" class="nav-item" onclick="window.Router.switch('home', this)">خانه</div>
+      <div id="nav-games" class="nav-item" onclick="window.Router.switch('games', this)">بازی‌ها</div>
+      <div id="nav-store" class="nav-item" onclick="window.Router.switch('store', this)">فروشگاه</div>
+      <div id="nav-friends" class="nav-item" onclick="window.Router.switch('friends', this)">دوستان</div>
+      <div id="nav-profile" class="nav-item" onclick="window.Router.switch('profile', this)">پروفایل</div>
+    </nav>
+  </div>
+  <script type="module" src="lobby.js?v=2"></script>
+</body>
+</html>
